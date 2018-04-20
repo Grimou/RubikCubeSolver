@@ -1,7 +1,10 @@
 import java.util.List;
+import java.util.Map;
 
 public class RubikCubeMovement {
     public static final int NB_FACE = 6;
+
+    public static Map<Position, List<PossibleMovement>> possibleMovement;
 
     public RubikCubeMovement(int cubeSize) {
         initPossibleMouvement(cubeSize);

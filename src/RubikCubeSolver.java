@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 public class RubikCubeSolver {
-    public static Map<Position, List<PossibleMovement>> possibleMovement;
-
     public enum Color {BLANC,BLEU,VERT,JAUNE,ROUGE,ORANGE};
 
     public static void main(String[] args) {
