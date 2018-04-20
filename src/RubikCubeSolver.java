@@ -10,6 +10,8 @@ public class RubikCubeSolver {
 
     public static Map<Position, List<PossibleMovement>> possibleMovement;
 
+    public enum Color {BLANC,BLEU,VERT,JAUNE,ROUGE,ORANGE};
+
     public static void main(String[] args) {
         Model model = new Model("RubikCubeSolver");
 
@@ -19,7 +21,6 @@ public class RubikCubeSolver {
         Solver solver = model.getSolver();
         solver.findSolution();
         solver.printStatistics();
-
     }
 
 
