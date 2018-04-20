@@ -6,13 +6,10 @@ public class RubikCubeSolver {
 
     public static final int difference = 20;
 
+    public enum Color {BLANC,BLEU,VERT,JAUNE,ROUGE,ORANGE};
+
     public static void main(String[] args) {
         Model model = new Model("RubikCubeSolver");
-        IntVar a = model.intVar("plusPetit", 0, 100);
-        IntVar b = model.intVar("plusGrand", 0, 100);
-
-
-        model.arithm(b, "-", a, ">=", difference).post();
 
 
 
@@ -20,8 +17,5 @@ public class RubikCubeSolver {
         Solver solver = model.getSolver();
         solver.findSolution();
         solver.printStatistics();
-
-        System.out.println("a : " + a.getValue());
-        System.out.println("b : " + b.getValue());
     }
 }
