@@ -1,37 +1,39 @@
 public class Position {
     private int face;
 
-    private int line;
+    private int x;
 
-    private int column;
+    private int y;
 
-    public Position(int face, int line, int column) {
+    public Position(int face, int x, int y) {
         this.face = face;
-        this.line = line;
-        this.column = column;
+        this.x = x;
+        this.y = y;
     }
 
     public int getFace() {
         return face;
     }
 
-    public void setFace(int face) {
-        this.face = face;
+    public int getX() {
+        return x;
     }
 
-    public int getLine() {
-        return line;
+    public int getY() {
+        return y;
     }
 
-    public void setLine(int line) {
-        this.line = line;
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Position) {
+            Position position = (Position) obj;
+            return this.face == position.face && this.x == position.y && this.y == position.y;
+        }
+        return false;
     }
 
-    public int getColumn() {
-        return column;
-    }
-
-    public void setColumn(int column) {
-        this.column = column;
+    @Override
+    public int hashCode() {
+        return 31*(31*face + x) + y;
     }
 }
