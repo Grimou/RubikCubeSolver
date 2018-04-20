@@ -5,6 +5,12 @@ public class Position {
 
     private int column;
 
+    public Position(int face, int line, int column) {
+        this.face = face;
+        this.line = line;
+        this.column = column;
+    }
+
     public int getFace() {
         return face;
     }
