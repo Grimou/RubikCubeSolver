@@ -1,14 +1,14 @@
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.Solver;
 import org.chocosolver.solver.variables.IntVar;
-
+import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 
 public class RubikCubeSolver {
 
     public static final int SIDELEN = 2;
     public static final int NBMOVES = 9 * SIDELEN;
-
     public enum Color {BLANC,BLEU,VERT,JAUNE,ROUGE,ORANGE};
 
     public static void main(String[] args) {
@@ -71,4 +71,5 @@ public class RubikCubeSolver {
         }
         return result;
     }
+
 }
