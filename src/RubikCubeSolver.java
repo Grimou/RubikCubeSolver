@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 public class RubikCubeSolver {
-    public static final int NB_FACE = 6;
-
     public static Map<Position, List<PossibleMovement>> possibleMovement;
 
     public enum Color {BLANC,BLEU,VERT,JAUNE,ROUGE,ORANGE};
@@ -22,19 +20,6 @@ public class RubikCubeSolver {
         solver.findSolution();
         solver.printStatistics();
     }
-
-
-    public static void initPossibleMouvement(int cubeSize) {
-        for (int a = 0; a < NB_FACE; a++) {
-
-        }
-    }
-
-    public static List<PossibleMovement> possibleMouvement(int cubeSize) {
-        //TODO
-        return null;
-    }
-
 
 
 }
