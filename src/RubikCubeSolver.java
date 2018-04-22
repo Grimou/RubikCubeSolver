@@ -4,6 +4,7 @@ import org.chocosolver.solver.variables.IntVar;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class RubikCubeSolver {
 
@@ -16,7 +17,7 @@ public class RubikCubeSolver {
         int varDepth = 0;
         boolean solved = false;
         ArrayList<IntVar[][][]> rubikCubets = new ArrayList<>();
-
+        RubikCubeMovement rcm = new RubikCubeMovement(SIDELEN);
         while (!solved){
             //Définitions des mouvements solutions
             IntVar[] movet = model.intVarArray("Move", varDepth, 0, NBMOVES - 1);
@@ -34,7 +35,7 @@ public class RubikCubeSolver {
             for (int j = 0; j < 6; j++) {
                 model.allEqual(flattenIntVarMatrix(rubikCubeT[j])).post();
             }
-            model.allDifferent(rubikCubeT[0][0][0], rubikCubeT[1][0][0], rubikCubeT[2][0][0], rubikCubeT[3][0][0], rubikCubeT[4][0][0], rubikCubeT[5][0][0]);
+            model.allDifferent(rubikCubeT[0][0][0], rubikCubeT[1][0][0], rubikCubeT[2][0][0], rubikCubeT[3][0][0], rubikCubeT[4][0][0], rubikCubeT[5][0][0]).post();
 
             IntVar[][] sames = model.intVarMatrix("Sames", varDepth, NBMOVES, 0, 1, true);
 
@@ -53,6 +54,21 @@ public class RubikCubeSolver {
                 }
                 unmoveds.add(i,currentUnmoved);
             }
+
+            for (int t = 1; t < varDepth; t++) {
+                for (int a = 0; a < 6; a++) {
+                    for (int i = 0; i < SIDELEN; i++) {
+                        for (int j = 0; j < SIDELEN; j++) {
+                            int finalT = t;
+                            List<IntVar> sameVar = rcm.possibleMovement(a, i, j).stream().map(pm -> sames[finalT][pm.movement]).collect(Collectors.toList());
+                            sameVar.add(unmoveds.get(t)[a][i][j]);
+                            model.sum((IntVar[]) sameVar.toArray(),"+",1).post();
+                        }
+                    }
+                }
+            }
+            
+
         }
 
 
