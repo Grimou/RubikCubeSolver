@@ -15,15 +15,16 @@ public class RubikCubeSolver {
 
     public static void main(String[] args) {
         Model model = new Model("RubikCubeSolver");
-        int varDepth = 0;
+        int varDepth = 1;
         boolean solved = false;
         Solver solver;
         ArrayList<IntVar[][][]> rubikCubets = new ArrayList<>();
         RubikCubeMovement rcm = new RubikCubeMovement(SIDELEN);
+        IntVar[] movet = null;
         while (!solved){
 
             //Définitions des mouvements solutions
-            IntVar[] movet = model.intVarArray("Move", varDepth, 0, NBMOVES - 1);
+            movet = model.intVarArray("Move", varDepth, 0, NBMOVES - 1);
 
             //Définition des cubes rubik
             rubikCubets.ensureCapacity(varDepth + 1);
@@ -56,7 +57,7 @@ public class RubikCubeSolver {
 
             for (int t = 0; t < varDepth; t++) {
                 for (int i = 0; i < NBMOVES; i++) {
-                    model.ifOnlyIf(model.arithm(sames[t][i], "=", 1),model.arithm(movet[i], "=", i));
+                    model.ifOnlyIf(model.arithm(sames[t][i], "=", 1),model.arithm(movet[t], "=", i));
                 }
             }
 
@@ -82,7 +83,7 @@ public class RubikCubeSolver {
                     }
                 }
             }
-            for (int t = 0; t < varDepth; t++) {
+            for (int t = 0; t < varDepth - 1; t++) {
                 for (int a = 0; a < 6; a++) {
                     for (int i = 0; i < SIDELEN; i++) {
                         for (int j = 0; j < SIDELEN; j++) {
@@ -113,7 +114,9 @@ public class RubikCubeSolver {
                 solved = true;
             }
         }
-
+        for (int i = 0; i < varDepth; i++) {
+            System.out.println(movet[i].getValue());
+        }
 
 
     }
