@@ -11,6 +11,7 @@ public class RubikCubeSolver {
 
     public static final int SIDELEN = 2;
     public static final int NBMOVES = 9 * SIDELEN;
+    public static final int[][][] CUBE2 = {{{1,2},{2,1}},{{4,6},{3,2}},{{5,1},{3,5}},{{5,4},{3,3}},{{6,6},{6,2}},{{4,5},{4,1}}};
 
     public static void main(String[] args) {
         Model model = new Model("RubikCubeSolver");
@@ -20,6 +21,7 @@ public class RubikCubeSolver {
         ArrayList<IntVar[][][]> rubikCubets = new ArrayList<>();
         RubikCubeMovement rcm = new RubikCubeMovement(SIDELEN);
         while (!solved){
+
             //Définitions des mouvements solutions
             IntVar[] movet = model.intVarArray("Move", varDepth, 0, NBMOVES - 1);
 
@@ -32,12 +34,24 @@ public class RubikCubeSolver {
                 }
                 rubikCubets.add(i,currentCubet);
             }
+
+            //Cube initial
+            for (int a = 0; a < 6; a++) {
+                for (int i = 0; i < SIDELEN; i++) {
+                    for (int j = 0; j < SIDELEN; j++) {
+                        model.arithm(rubikCubets.get(0)[a][i][j],"=",CUBE2[a][i][j]);
+                    }
+                }
+            }
+
+            //Cube final
             IntVar[][][] rubikCubeT = rubikCubets.get(varDepth);
             for (int j = 0; j < 6; j++) {
                 model.allEqual(flattenIntVarMatrix(rubikCubeT[j])).post();
             }
             model.allDifferent(rubikCubeT[0][0][0], rubikCubeT[1][0][0], rubikCubeT[2][0][0], rubikCubeT[3][0][0], rubikCubeT[4][0][0], rubikCubeT[5][0][0]).post();
 
+            //Reste du modele
             IntVar[][] sames = model.intVarMatrix("Sames", varDepth, NBMOVES, 0, 1, true);
 
             for (int t = 0; t < varDepth; t++) {
