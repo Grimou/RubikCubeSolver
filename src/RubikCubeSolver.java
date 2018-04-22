@@ -11,7 +11,6 @@ public class RubikCubeSolver {
 
     public static final int SIDELEN = 2;
     public static final int NBMOVES = 9 * SIDELEN;
-    public enum Color {BLANC,BLEU,VERT,JAUNE,ROUGE,ORANGE};
 
     public static void main(String[] args) {
         Model model = new Model("RubikCubeSolver");
