@@ -1,4 +1,5 @@
 import org.chocosolver.solver.Model;
+import org.chocosolver.solver.Solution;
 import org.chocosolver.solver.Solver;
 import org.chocosolver.solver.variables.IntVar;
 import java.util.List;
@@ -16,6 +17,7 @@ public class RubikCubeSolver {
         Model model = new Model("RubikCubeSolver");
         int varDepth = 0;
         boolean solved = false;
+        Solver solver;
         ArrayList<IntVar[][][]> rubikCubets = new ArrayList<>();
         RubikCubeMovement rcm = new RubikCubeMovement(SIDELEN);
         while (!solved){
@@ -27,7 +29,7 @@ public class RubikCubeSolver {
             for (int i = 0; i <= varDepth; i++) {
                 IntVar[][][] currentCubet = new IntVar[6][SIDELEN][SIDELEN];
                 for (int j = 0; j < 6; j++) {
-                    currentCubet[j] = model.intVarMatrix("Cube :" + i + " Face :" + j, SIDELEN, SIDELEN, 0, 5 );
+                    currentCubet[j] = model.intVarMatrix("Cube :" + i + " Face :" + j, SIDELEN, SIDELEN, 1, 6 );
                 }
                 rubikCubets.add(i,currentCubet);
             }
@@ -67,15 +69,40 @@ public class RubikCubeSolver {
                     }
                 }
             }
-            
-
+            for (int t = 0; t < varDepth; t++) {
+                for (int a = 0; a < 6; a++) {
+                    for (int i = 0; i < SIDELEN; i++) {
+                        for (int j = 0; j < SIDELEN; j++) {
+                            List<PossibleMovement> pms = rcm.possibleMovement(a, i, j);
+                            for (PossibleMovement cpm : pms){
+                                IntVar ls = model.intVar(0,6);
+                                IntVar rs = model.intVar(0,6);
+                                model.times(sames[t+1][cpm.movement],rubikCubets.get(t)[a][i][j],ls).post();
+                                model.times(sames[t+1][cpm.movement],rubikCubets.get(t+1)[cpm.getEndPosition().getFace()][cpm.getEndPosition().getX()][cpm.getEndPosition().getY()],rs).post();
+                                model.arithm(ls,"=",rs).post();
+                            }
+                            IntVar ls = model.intVar(0,6);
+                            IntVar rs = model.intVar(0,6);
+                            model.times(unmoveds.get(t+1)[a][i][j],rubikCubets.get(t)[a][i][j],ls).post();
+                            model.times(unmoveds.get(t+1)[a][i][j],rubikCubets.get(t+1)[a][i][j],rs).post();
+                            model.arithm(ls,"=",rs).post();
+                        }
+                    }
+                }
+            }
+            solver = model.getSolver();
+            Solution sol = solver.findSolution();
+            solver.printStatistics();
+            if (sol == null) {
+                varDepth++;
+            }
+            else{
+                solved = true;
+            }
         }
 
 
 
-        Solver solver = model.getSolver();
-        solver.findSolution();
-        solver.printStatistics();
     }
 
     public static IntVar[] flattenIntVarMatrix(IntVar[][] matrix){
