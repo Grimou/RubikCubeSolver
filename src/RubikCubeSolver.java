@@ -115,7 +115,7 @@ public class RubikCubeSolver {
             }
         }
         for (int i = 0; i < varDepth; i++) {
-            System.out.println(movet[i].getValue());
+            decodeAndPrint(movet[i].getValue());
         }
 
 
@@ -129,6 +129,22 @@ public class RubikCubeSolver {
             }
         }
         return result;
+    }
+
+    public static void decodeAndPrint(int movement) {
+        int axisNumber = movement/(SIDELEN*3);
+        String axis = "";
+        if (axisNumber == 0) {
+            axis = "X";
+        } else if (axisNumber == 1) {
+            axis = "Y";
+        } else {
+            axis = "Z";
+        }
+        int rest = movement%(SIDELEN*3);
+        int nbOfRotation = (rest/SIDELEN) + 1;
+        int column = rest%SIDELEN;
+        System.out.println("Axis: " + axis + ", column: " + column + ", number of quarter of turn: " + nbOfRotation);
     }
 
 }
